@@ -4,6 +4,8 @@
 
 [日本語](README.ja.md)
 
+**Fastest in our Apple M5 Pro benchmark for Whisper large-v3 Q5_0.** MetalWhisperM5 transcribed 10 minutes and 38 seconds of English audio in **6.409 seconds (99.531× real time)** at beam size 5. With the same audio, model, and beam size, `whisper-cli` took 50.925 seconds and the first `whisper-server` request after model loading took 51.030 seconds. [Benchmark results and reproduction steps](Benchmarks/README.md)
+
 MetalWhisperM5 runs Whisper speech recognition locally on Apple Silicon. It is a Swift library and a command-line tool that read GGML models directly and use the Metal, Metal Performance Shaders (MPS), Accelerate, and AVFoundation frameworks. The Swift package has zero third-party dependencies. Pass an audio file or 16 kHz mono PCM to get text and timestamped segments and tokens.
 
 ## Requirements

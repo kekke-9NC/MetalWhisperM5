@@ -4,6 +4,8 @@
 
 [English](README.md)
 
+**Whisper large-v3 Q5_0の実測比較で最速（Apple M5 Pro）。** ビーム幅5で10分38秒の英語音声を **6.409秒（実時間の99.531倍速）** で文字起こししました。同じ音声・モデル・ビーム幅で、`whisper-cli` は50.925秒、`whisper-server` はモデル読み込み後の最初のリクエストに51.030秒かかりました。[実測結果と再現手順](Benchmarks/README.md)
+
 MetalWhisperM5は、Apple Silicon MacでWhisperの音声認識をローカル実行するSwiftライブラリとCLIです。GGMLモデルを直接読み込み、Metal、Metal Performance Shaders（MPS）、Accelerate、AVFoundationで推論します。Swift Packageの外部依存はありません。音声ファイルまたは16 kHzモノラルPCMから、文字起こしとタイムスタンプ付きのセグメント・トークンを取得できます。
 
 ## 動作環境
