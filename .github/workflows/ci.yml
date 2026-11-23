@@ -1,0 +1,47 @@
+name: Swift CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    name: Build and test (${{ matrix.runner }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-26
+            xcode: ""
+          - runner: macos-15
+            xcode: /Applications/Xcode_16.4.app/Contents/Developer
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Select Xcode and macOS SDK
+        shell: bash
+        env:
+          XCODE_DEVELOPER_DIR: ${{ matrix.xcode }}
+        run: |
+          set -euo pipefail
+          if [[ -n "$XCODE_DEVELOPER_DIR" ]]; then
+            export DEVELOPER_DIR="$XCODE_DEVELOPER_DIR"
+            printf 'DEVELOPER_DIR=%s\n' "$DEVELOPER_DIR" >> "$GITHUB_ENV"
+          fi
+          SDKROOT="$(xcrun --sdk macosx --show-sdk-path)"
+          printf 'SDKROOT=%s\n' "$SDKROOT" >> "$GITHUB_ENV"
+          sw_vers -productVersion
+          uname -m
+          xcodebuild -version
+          xcrun --sdk macosx --show-sdk-version
+          swift --version
+      - name: Build release
+        run: swift build -c release
+      - name: Run model-free tests
+        run: env -u METAL_WHISPER_MODEL_PATH -u METAL_WHISPER_TEST_AUDIO_PATH swift test
